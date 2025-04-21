@@ -1,29 +1,23 @@
 {
-  "uuid": "39faa0f6-82cb-4b92-9e72-a68d70c1a281",
+  "uuid": "a9580c7e-9cb1-43a1-9ed3-f05a892b795f",
   "lastMigration": 33,
-  "name": "Unittest",
+  "name": "Mockoon",
   "endpointPrefix": "",
   "latency": 0,
-  "port": 4000,
+  "port": 3000,
   "hostname": "",
-  "rootChildren": [
-    {
-      "type": "route",
-      "uuid": "21a24ccb-d135-4af0-a388-ef787d25aa6c"
-    }
-  ],
   "folders": [],
   "routes": [
     {
-      "uuid": "21a24ccb-d135-4af0-a388-ef787d25aa6c",
+      "uuid": "0e8b55da-5b3f-4a15-bd39-4e9b0f823fc2",
       "type": "http",
       "documentation": "",
-      "method": "post",
-      "endpoint": "user_type",
+      "method": "get",
+      "endpoint": "create_user",
       "responses": [
         {
-          "uuid": "770564aa-0b0d-49f6-962e-3d2f7ae9dd72",
-          "body": "{\n  \"name\": \"admin\", \n  \"code\": 1, \n  \"state\": true\n}",
+          "uuid": "7b320c8c-803c-4a0c-a00a-8a235a89b29c",
+          "body": "{}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -32,73 +26,11 @@
           "filePath": "",
           "databucketID": "",
           "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "name",
-              "value": "admin",
-              "invert": false,
-              "operator": "equals"
-            }
-          ],
+          "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "ea5534fd-3180-4b36-8d25-db86618d25aa",
-          "body": "{\n  \"name\": \"user\", \n  \"code\": 3, \n  \"state\": false\n}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "name",
-              "value": "user",
-              "invert": false,
-              "operator": "equals"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
-          "crudKey": "id",
-          "callbacks": []
-        },
-        {
-          "uuid": "aaf55254-67c8-478c-b9ac-f03936d5a777",
-          "body": "{\n  \"name\": \"teacher\", \n  \"code\": 2, \n  \"state\": true\n}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "name",
-              "value": "teacher",
-              "invert": false,
-              "operator": "equals"
-            }
-          ],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": false,
           "crudKey": "id",
           "callbacks": []
         }
@@ -106,6 +38,12 @@
       "responseMode": null,
       "streamingMode": null,
       "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "0e8b55da-5b3f-4a15-bd39-4e9b0f823fc2"
     }
   ],
   "proxyMode": false,
@@ -121,9 +59,36 @@
     "passphrase": ""
   },
   "cors": true,
-  "headers": [],
-  "proxyReqHeaders": [],
-  "proxyResHeaders": [],
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
   "data": [],
   "callbacks": []
 }
