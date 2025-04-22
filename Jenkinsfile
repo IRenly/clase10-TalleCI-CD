@@ -10,7 +10,7 @@ pipeline {
   stages {
     stage('Check Python Version') {
       steps {
-        bat '"C:\\Users\\sebas\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" --version'
+        bat 'python --version'  // Ahora usa 'python' sin la ruta completa
       }
     }
 
@@ -23,10 +23,10 @@ pipeline {
     stage('Instalar dependencias') {
       steps {
         bat """
-          "C:\\Users\\sebas\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m venv %VENV%
+          python -m venv %VENV%
           call %VENV%\\Scripts\\activate.bat
-          "%VENV%\\Scripts\\pip.exe" install --upgrade pip
-          "%VENV%\\Scripts\\pip.exe" install -r requirements.txt
+          pip install --upgrade pip
+          pip install -r requirements.txt
         """
       }
     }
@@ -35,7 +35,7 @@ pipeline {
       steps {
         bat """
           call %VENV%\\Scripts\\activate.bat
-          "%VENV%\\Scripts\\pytest.exe" --maxfail=1 --disable-warnings --quiet
+          pytest --maxfail=1 --disable-warnings --quiet
         """
       }
     }
@@ -75,7 +75,5 @@ pipeline {
         """
       }
     }
-
-    
   }
 }
