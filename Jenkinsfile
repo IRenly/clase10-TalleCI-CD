@@ -3,14 +3,14 @@ pipeline {
 
   environment {
     SONARQUBE_SERVER = 'sonarqube'
-    SONAR_SCANNER_HOME = '/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarScanner'
-    VENV = "${WORKSPACE}/venv"
+    SONAR_SCANNER_HOME = 'C:\\sonar-scanner' // Cambia esto a la ruta real en tu Windows
+    VENV = "${WORKSPACE}\\venv"
   }
 
   stages {
     stage('Check Python Version') {
       steps {
-        sh 'python3 --version'
+        bat 'python --version'
       }
     }
 
@@ -22,17 +22,21 @@ pipeline {
 
     stage('Instalar dependencias') {
       steps {
-        sh '''
-          python3 -m venv venv
-          venv/bin/pip install --upgrade pip
-          venv/bin/pip install -r requirements.txt
-        '''
+        bat """
+          python -m venv %VENV%
+          call %VENV%\\Scripts\\activate.bat
+          pip install --upgrade pip
+          pip install -r requirements.txt
+        """
       }
     }
 
     stage('Pruebas unitarias') {
       steps {
-        sh 'venv/bin/pytest --maxfail=1 --disable-warnings --quiet'
+        bat """
+          call %VENV%\\Scripts\\activate.bat
+          pytest --maxfail=1 --disable-warnings --quiet
+        """
       }
     }
 
@@ -47,9 +51,9 @@ pipeline {
     stage('Login to DockerHub') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          sh '''
-            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-          '''
+          bat """
+            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+          """
         }
       }
     }
@@ -64,10 +68,11 @@ pipeline {
 
     stage('Lint') {
       steps {
-        sh '''
-          venv/bin/pip install pylint
-          venv/bin/pylint src --output-format=json > pylint-report.json || true
-        '''
+        bat """
+          call %VENV%\\Scripts\\activate.bat
+          pip install pylint
+          pylint src --output-format=json > pylint-report.json || exit 0
+        """
       }
     }
 
@@ -75,13 +80,13 @@ pipeline {
       steps {
         withSonarQubeEnv("${SONARQUBE_SERVER}") {
           withCredentials([string(credentialsId: 'sonarqube_auth_token', variable: 'SONAR_TOKEN')]) {
-            sh """
-              ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                -Dsonar.projectKey=my-python-app \
-                -Dsonar.sources=src \
-                -Dsonar.host.url=http://sonarqube:9000 \
-                -Dsonar.token=${SONAR_TOKEN} \
-                -Dsonar.python.coverage.reportPaths=coverage.xml \
+            bat """
+              "${SONAR_SCANNER_HOME}\\bin\\sonar-scanner.bat" ^
+                -Dsonar.projectKey=my-python-app ^
+                -Dsonar.sources=src ^
+                -Dsonar.host.url=http://sonarqube:9000 ^
+                -Dsonar.token=%SONAR_TOKEN% ^
+                -Dsonar.python.coverage.reportPaths=coverage.xml ^
                 -Dsonar.python.pylint.reportPaths=pylint-report.json
             """
           }
