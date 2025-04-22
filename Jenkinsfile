@@ -1,8 +1,6 @@
 pipeline {
   agent any
 
-
-
   environment {
     SONARQUBE_SERVER = 'sonarqube'
     SONAR_SCANNER_HOME = '/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarScanner'
@@ -11,10 +9,11 @@ pipeline {
 
   stages {
     stage('Check Python Version') {
-        steps {
-            sh 'python --version'  // Esto debería mostrarte la versión de Python instalada
-        }
+      steps {
+        sh 'python3 --version'
+      }
     }
+
     stage('Clonar repositorio') {
       steps {
         git branch: 'main', url: 'https://github.com/IRenly/clase10-TalleCI-CD'
@@ -24,19 +23,16 @@ pipeline {
     stage('Instalar dependencias') {
       steps {
         sh '''
-          python -m venv ${VENV}
-          . ${VENV}/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
+          python3 -m venv venv
+          venv/bin/pip install --upgrade pip
+          venv/bin/pip install -r requirements.txt
         '''
       }
     }
+
     stage('Pruebas unitarias') {
       steps {
-        sh '''
-          . ${VENV}/bin/activate
-          pytest --maxfail=1 --disable-warnings --quiet
-        '''
+        sh 'venv/bin/pytest --maxfail=1 --disable-warnings --quiet'
       }
     }
 
@@ -69,9 +65,8 @@ pipeline {
     stage('Lint') {
       steps {
         sh '''
-          . ${VENV}/bin/activate
-          pip install pylint
-          pylint src --output-format=json > pylint-report.json || true
+          venv/bin/pip install pylint
+          venv/bin/pylint src --output-format=json > pylint-report.json || true
         '''
       }
     }
