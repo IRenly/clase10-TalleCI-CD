@@ -1,10 +1,7 @@
 pipeline {
   agent any
 
-  tools {
-    // Asegúrate de tener configurado el tool 'Python3' en Jenkins
-    python 'Python3'
-  }
+
 
   environment {
     SONARQUBE_SERVER = 'sonarqube'
