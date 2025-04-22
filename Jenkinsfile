@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     SONARQUBE_SERVER = 'sonarqube'
-    SONAR_SCANNER_HOME = 'C:\sonarqube\sonarqube-25.4.0.105899\bin\windows-x86-64' // Cambia esto a la ruta real en tu Windows
+    SONAR_SCANNER_HOME = 'C:\\sonarqube\\sonarqube-25.4.0.105899\\bin\\windows-x86-64'  // Cambia esto a la ruta real en tu Windows
     VENV = "${WORKSPACE}\\venv"
   }
 
@@ -80,7 +80,7 @@ pipeline {
         withSonarQubeEnv("${SONARQUBE_SERVER}") {
           withCredentials([string(credentialsId: 'sonarqube_auth_token', variable: 'SONAR_TOKEN')]) {
             bat """
-              "${SONAR_SCANNER_HOME}StartSonar.bat" ^
+              "${SONAR_SCANNER_HOME}\\StartSonar.bat" ^
                 -Dsonar.projectKey=my-python-app ^
                 -Dsonar.sources=src ^
                 -Dsonar.host.url=http://sonarqube:9000 ^
