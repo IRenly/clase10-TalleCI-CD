@@ -13,6 +13,11 @@ pipeline {
   }
 
   stages {
+    stage('Check Python Version') {
+        steps {
+            sh 'python --version'  // Esto debería mostrarte la versión de Python instalada
+        }
+    }
     stage('Clonar repositorio') {
       steps {
         git branch: 'main', url: 'https://github.com/IRenly/clase10-TalleCI-CD'
