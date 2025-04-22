@@ -13,6 +13,12 @@ pipeline {
   }
 
   stages {
+    stage('Clonar repositorio') {
+      steps {
+        git branch: 'main', url: 'https://github.com/IRenly/clase10-TalleCI-CD'
+      }
+    }
+
     stage('Instalar dependencias') {
       steps {
         sh '''
@@ -21,6 +27,40 @@ pipeline {
           pip install --upgrade pip
           pip install -r requirements.txt
         '''
+      }
+    }
+    stage('Pruebas unitarias') {
+      steps {
+        sh '''
+          . ${VENV}/bin/activate
+          pytest --maxfail=1 --disable-warnings --quiet
+        '''
+      }
+    }
+
+    stage('Construir imagen Docker') {
+      steps {
+        script {
+          dockerImage = docker.build("irenly/clase10-talleci-cd")
+        }
+      }
+    }
+
+    stage('Login to DockerHub') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+          '''
+        }
+      }
+    }
+
+    stage('Push to DockerHub') {
+      steps {
+        script {
+          docker.image('irenly/clase10-talleci-cd').push()
+        }
       }
     }
 
