@@ -23,10 +23,10 @@ pipeline {
     stage('Instalar dependencias') {
       steps {
         bat """
-          python -m venv %VENV%
+          "C:\\Users\\sebas\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m venv %VENV%
           call %VENV%\\Scripts\\activate.bat
-          pip install --upgrade pip
-          pip install -r requirements.txt
+          "%VENV%\\Scripts\\pip.exe" install --upgrade pip
+          "%VENV%\\Scripts\\pip.exe" install -r requirements.txt
         """
       }
     }
