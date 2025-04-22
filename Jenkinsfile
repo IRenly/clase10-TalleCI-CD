@@ -35,7 +35,7 @@ pipeline {
       steps {
         bat """
           call %VENV%\\Scripts\\activate.bat
-          pytest --maxfail=1 --disable-warnings --quiet
+          "%VENV%\\Scripts\\pytest.exe" --maxfail=1 --disable-warnings --quiet
         """
       }
     }
