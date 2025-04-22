@@ -3,14 +3,14 @@ pipeline {
 
   environment {
     SONARQUBE_SERVER = 'sonarqube'
-    SONAR_SCANNER_HOME = 'C:\\sonar-scanner' // Cambia esto a la ruta real en tu Windows
+    SONAR_SCANNER_HOME = 'C:\sonarqube\sonarqube-25.4.0.105899\bin\windows-x86-64' // Cambia esto a la ruta real en tu Windows
     VENV = "${WORKSPACE}\\venv"
   }
 
   stages {
     stage('Check Python Version') {
       steps {
-        bat 'python --version'  // Ahora usa 'python' sin la ruta completa
+        bat '"C:\\Users\\sebas\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" --version'
       }
     }
 
@@ -23,10 +23,10 @@ pipeline {
     stage('Instalar dependencias') {
       steps {
         bat """
-          python -m venv %VENV%
+          "C:\\Users\\sebas\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m venv %VENV%
           call %VENV%\\Scripts\\activate.bat
-          pip install --upgrade pip
-          pip install -r requirements.txt
+          "%VENV%\\Scripts\\pip.exe" install --upgrade pip
+          "%VENV%\\Scripts\\pip.exe" install -r requirements.txt
         """
       }
     }
@@ -35,7 +35,7 @@ pipeline {
       steps {
         bat """
           call %VENV%\\Scripts\\activate.bat
-          pytest --maxfail=1 --disable-warnings --quiet
+          "%VENV%\\Scripts\\pytest.exe" --maxfail=1 --disable-warnings --quiet
         """
       }
     }
@@ -75,5 +75,23 @@ pipeline {
         """
       }
     }
+    stage('Análisis SonarQube') {
+      steps {
+        withSonarQubeEnv("${SONARQUBE_SERVER}") {
+          withCredentials([string(credentialsId: 'sonarqube_auth_token', variable: 'SONAR_TOKEN')]) {
+            bat """
+              "${SONAR_SCANNER_HOME}StartSonar.bat" ^
+                -Dsonar.projectKey=my-python-app ^
+                -Dsonar.sources=src ^
+                -Dsonar.host.url=http://sonarqube:9000 ^
+                -Dsonar.token=%SONAR_TOKEN% ^
+                -Dsonar.python.coverage.reportPaths=coverage.xml ^
+                -Dsonar.python.pylint.reportPaths=pylint-report.json
+            """
+          }
+        }
+      }
+    }
+    
   }
 }
