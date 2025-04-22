@@ -10,7 +10,7 @@ pipeline {
   stages {
     stage('Check Python Version') {
       steps {
-        bat '"C:\\Python311\\python.exe" --version'
+        bat '"C:\\Users\\sebas\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" --version'
       }
     }
 
